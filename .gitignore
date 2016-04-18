@@ -50,3 +50,9 @@ Temporary Items
 *.sdf
 *.pdb
 *.ilk
+*.obj
+*.tlog
+*.log
+*.pch
+*.idb
+*.lastbuildstate

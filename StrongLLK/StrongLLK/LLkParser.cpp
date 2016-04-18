@@ -3,6 +3,7 @@
 
 LLkParser::LLkParser(std::string filename)
 {
+    std::string value;
     std::ifstream f(filename);
     f>>m_K;
     while(!f.eof())
