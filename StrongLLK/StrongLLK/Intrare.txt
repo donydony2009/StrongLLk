@@ -1,4 +1,7 @@
-2
+3
+S aABc
 A abcefghijkl
 A aBd
 A aCc
+B d
+C e
