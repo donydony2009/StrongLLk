@@ -20,6 +20,12 @@ LLkParser::LLkParser(std::string filename)
 		tmp = state.first;
 		First(tmp);
 	}
+
+	Follow('S');
+	for(auto& state : m_States)
+	{
+		Follow(state.first);
+	}
 	int i = 0;
 	i++;
 
@@ -84,9 +90,52 @@ std::vector<std::string> LLkParser::First(const std::string& val)
 	return result;
 }
 
-std::vector<std::string> LLkParser::Follow(char val, std::vector<char>& callstack)
+std::vector<std::string> LLkParser::Follow(char val)
 {
+	std::vector<std::string> result;
+	
+	auto& found = m_FollowCache.find(val);
+	if(found != m_FollowCache.end())
+	{
+		return found->second;
+	}
 
+	for(auto& it : m_States)
+	{
+		for(auto& state : it.second)
+		{
+			std::vector<std::string> intermediateResult;
+			intermediateResult.push_back("");
+			u32 pos = state.find(val);
+			if(pos == std::string::npos)
+			{
+				continue;
+			}
+
+			for(int i = pos + 1; i < state.size(); i++)
+			{
+				if(IsNonTerminal(state[i]))
+				{
+					AppendToAll(intermediateResult, m_FirstCache[state[i]]);
+				}
+				else
+				{
+					AppendToAll(intermediateResult, state[i]);
+				}
+				MoveIntermediateResults(intermediateResult, result);
+				if(intermediateResult.size() == 0)
+					break;
+			}
+			
+			result.insert(result.end(), intermediateResult.begin(), intermediateResult.end());
+		}
+	}
+	if(val == 'S')
+	{
+		result.push_back("$");
+	}
+	m_FollowCache[val] = result;
+	return result;
 }
 
 bool LLkParser::IsNonTerminal(char c)
@@ -114,6 +163,14 @@ void LLkParser::MoveIntermediateResults(std::vector<std::string>& intermediateRe
 		}
 	}
 	intermediateResult.resize(size);
+}
+
+void LLkParser::AppendToAll(std::vector<std::string>& appendTo, char appended)
+{
+	for(auto& str : appendTo)
+	{
+		str += appended;
+	}
 }
 
 void LLkParser::AppendToAll(std::vector<std::string>& appendTo, std::string appended)

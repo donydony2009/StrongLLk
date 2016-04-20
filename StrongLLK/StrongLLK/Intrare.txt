@@ -1,5 +1,5 @@
 3
-S aABc
+S aABAc
 A abcefghijkl
 A aBd
 A aCc
