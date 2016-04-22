@@ -1,7 +1,10 @@
 3
-S aABAc
-A abcefghijkl
-A aBd
-A aCc
-B d
-C e
+S ABCDa
+A ab
+A ~
+B bc
+B ~
+C cd
+C ~
+D de
+D ~
